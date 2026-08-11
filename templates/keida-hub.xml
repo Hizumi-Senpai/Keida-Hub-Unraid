@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>keida-hub</Name>
+  <Repository>ghcr.io/hizumi-senpai/keida-hub:beta</Repository>
+  <Registry>https://github.com/users/Hizumi-Senpai/packages/container/package/keida-hub</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <MyMAC/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/Hizumi-Senpai/Keida-Hub-Unraid/issues</Support>
+  <Project>https://github.com/Hizumi-Senpai/Keida-Hub-Unraid</Project>
+  <ReadMe>https://raw.githubusercontent.com/Hizumi-Senpai/Keida-Hub-Unraid/main/README.md</ReadMe>
+  <Overview>Keida Hub is a self-hosted dashboard for games, services, integrations, status, controls, and home-server tools.</Overview>
+  <Category>Tools:</Category>
+  <WebUI>http://[IP]:[PORT:8787]/</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/Hizumi-Senpai/Keida-Hub-Unraid/main/templates/keida-hub.xml</TemplateURL>
+  <Icon/>
+  <ExtraParams>--restart unless-stopped</ExtraParams>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled/>
+  <DonateText/>
+  <DonateLink/>
+  <Requires/>
+  <Config Name="Appdata" Target="/config" Default="/mnt/user/appdata/keida-hub" Mode="rw" Description="Persistent Keida Hub configuration, database, and application state." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/keida-hub</Config>
+  <Config Name="WebUI Port" Target="8787" Default="8787" Mode="tcp" Description="Port used to access the Keida Hub web interface." Type="Port" Display="always" Required="true" Mask="false">8787</Config>
+  <TailscaleStateDir/>
+</Container>
