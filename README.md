@@ -6,12 +6,13 @@ Keida Hub is distributed as a public Docker image through GitHub Container Regis
 
 ## Install on Unraid
 
-### 1. Add the Keida Hub template repository
+### 1. Download the Keida Hub template
 
-Open an Unraid terminal and run these commands:
+Open an Unraid terminal and run:
 
-    REPO="https://github.com/Hizumi-Senpai/Keida-Hub-Unraid"
-    grep -Fxq "$REPO" /boot/config/plugins/dockerMan/template-repos || echo "$REPO" >> /boot/config/plugins/dockerMan/template-repos
+    curl -fsSL 'https://raw.githubusercontent.com/Hizumi-Senpai/Keida-Hub-Unraid/main/templates/keida-hub.xml' -o /boot/config/plugins/dockerMan/templates-user/my-keida-hub.xml
+
+    chmod 600 /boot/config/plugins/dockerMan/templates-user/my-keida-hub.xml
 
 ### 2. Open the template
 
@@ -22,7 +23,7 @@ In the Unraid WebUI:
 3. Open the Template dropdown.
 4. Select keida-hub.
 
-If it does not appear immediately, refresh the Docker page.
+If it does not appear immediately, refresh the Add Container page once.
 
 ### 3. Review the defaults
 
@@ -45,7 +46,9 @@ When installation finishes, open the Keida Hub WebUI and complete the first-run 
 
 ## Updates
 
-Beta installations follow the :beta container tag. When a new Keida Hub beta is published, Unraid can detect the updated Docker image through its normal container update system.
+Beta installations follow the :beta container tag.
+
+When a new Keida Hub beta is published, Unraid can detect the updated Docker image through its normal container update system.
 
 Persistent configuration and the Keida Hub database are stored outside the container in /mnt/user/appdata/keida-hub.
 
@@ -57,4 +60,6 @@ Advanced installations can optionally add a read-only Crafty server-files mappin
 
 ## Current status
 
-Keida Hub is currently in beta. This repository contains installation material only; the application source repository is separate.
+Keida Hub is currently in beta.
+
+This repository contains installation material only. The application source repository is separate and private.
