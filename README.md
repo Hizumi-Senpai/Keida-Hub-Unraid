@@ -58,8 +58,34 @@ Keida Hub does not require direct access to Crafty's server files for normal ins
 
 Advanced installations can optionally add a read-only Crafty server-files mapping when filesystem-backed console functionality is desired.
 
-## Current status
+## Current beta
 
-Keida Hub is currently in beta.
+Current public release:
 
-This repository contains installation material only. The application source repository is separate and private.
+`0.2.0-beta.2`
+
+Installations using the `:beta` container tag receive beta releases through
+Unraid's normal Docker update system.
+
+### Beta.2 highlights
+
+- Added **Remote Keida Hub** dashboard tiles for shortcuts to another Keida Hub.
+- Multiple Remote Hub tiles can be added with custom names and URLs.
+- Palworld networking is now installation-specific instead of using built-in
+  server addresses.
+- Fresh installations leave native Palworld support unconfigured unless the
+  required `KEIDA_PALWORLD_*` environment values are explicitly supplied.
+
+### Upgrading from beta.1
+
+Standard installations can update normally. Keida Hub configuration and its
+database remain persistent under `/config`.
+
+If native Palworld support is not being used, no additional action is needed.
+
+Existing installations that relied on the beta.1 built-in Palworld network
+values must explicitly configure their own Palworld host, ports, bridge URL,
+and join address when moving to beta.2.
+
+This repository contains installation material only. The application source
+repository is separate and private.
