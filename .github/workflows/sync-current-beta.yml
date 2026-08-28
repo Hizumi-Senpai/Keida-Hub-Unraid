@@ -1,0 +1,90 @@
+name: Sync Current Beta
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/sync-current-beta.yml"
+      - ".github/scripts/sync_beta_readme.py"
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-current-beta
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    name: Sync published beta to README
+    runs-on: ubuntu-latest
+
+    env:
+      BETA_IMAGE: ghcr.io/hizumi-senpai/keida-hub:beta
+
+    steps:
+      - name: Check out install repository
+        uses: actions/checkout@v6
+
+      - name: Pull published beta image
+        run: docker pull "$BETA_IMAGE"
+
+      - name: Read beta version from image
+        id: beta
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          VERSION="$(
+            docker run --rm \
+              --entrypoint python \
+              "$BETA_IMAGE" \
+              -c "import tomllib; print(tomllib.load(open('/app/backend/pyproject.toml', 'rb'))['project']['version'])"
+          )"
+
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+-beta\.[0-9]+$ ]]; then
+            echo "ERROR: Unexpected beta version from image: $VERSION" >&2
+            exit 1
+          fi
+
+          echo "Published beta: $VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Confirm template follows beta tag
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          grep -Fq \
+            '<Repository>ghcr.io/hizumi-senpai/keida-hub:beta</Repository>' \
+            templates/keida-hub.xml
+
+      - name: Sync README version marker
+        env:
+          VERSION: ${{ steps.beta.outputs.version }}
+        run: python3 .github/scripts/sync_beta_readme.py "$VERSION"
+
+      - name: Commit page update when needed
+        env:
+          VERSION: ${{ steps.beta.outputs.version }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          git diff --check
+
+          if git diff --quiet -- README.md; then
+            echo "README is already current."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add README.md
+          git commit -m "Sync Unraid page to ${VERSION}"
+          git push origin HEAD:main
