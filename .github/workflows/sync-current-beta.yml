@@ -39,19 +39,24 @@ jobs:
         run: |
           set -Eeuo pipefail
 
-          VERSION="$(
+          RAW_VERSION="$(
             docker run --rm \
               --entrypoint python \
               "$BETA_IMAGE" \
               -c "import tomllib; print(tomllib.load(open('/app/backend/pyproject.toml', 'rb'))['project']['version'])"
           )"
 
-          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+-beta\.[0-9]+$ ]]; then
-            echo "ERROR: Unexpected beta version from image: $VERSION" >&2
+          if [[ "$RAW_VERSION" =~ ^([0-9]+\.[0-9]+\.[0-9]+)b([0-9]+)$ ]]; then
+            VERSION="${BASH_REMATCH[1]}-beta.${BASH_REMATCH[2]}"
+          elif [[ "$RAW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+-beta\.[0-9]+$ ]]; then
+            VERSION="$RAW_VERSION"
+          else
+            echo "ERROR: Unexpected beta version from image: $RAW_VERSION" >&2
             exit 1
           fi
 
-          echo "Published beta: $VERSION"
+          echo "Image package version: $RAW_VERSION"
+          echo "Published beta:       $VERSION"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Confirm template follows beta tag
