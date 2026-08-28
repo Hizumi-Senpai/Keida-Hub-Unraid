@@ -22,6 +22,7 @@ jobs:
   sync:
     name: Sync published beta to README
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     env:
       BETA_IMAGE: ghcr.io/hizumi-senpai/keida-hub:beta
