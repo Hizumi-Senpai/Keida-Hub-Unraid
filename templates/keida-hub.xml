@@ -25,5 +25,9 @@
   <Requires/>
   <Config Name="Appdata" Target="/config" Default="/mnt/user/appdata/keida-hub" Mode="rw" Description="Persistent Keida Hub configuration, database, and application state." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/keida-hub</Config>
   <Config Name="WebUI Port" Target="8787" Default="8787" Mode="tcp" Description="Port used to access the Keida Hub web interface." Type="Port" Display="always" Required="true" Mask="false">8787</Config>
+  <Config Name="Discord Sign-In Enabled" Target="KEIDA_DISCORD_OAUTH_ENABLED" Default="false" Mode="" Description="Optional per-install Discord OAuth sign-in. Configure Client ID, Redirect URI, Guild ID, and the file-backed client secret before enabling." Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
+  <Config Name="Discord OAuth Client ID" Target="KEIDA_DISCORD_OAUTH_CLIENT_ID" Default="" Mode="" Description="Application ID from your own Discord application." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="Discord OAuth Redirect URI" Target="KEIDA_DISCORD_OAUTH_REDIRECT_URI" Default="" Mode="" Description="Exact Discord OAuth redirect URI for this Hub, normally https://your-hub.example/api/auth/discord/callback." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="Discord Guild ID" Target="KEIDA_DISCORD_GUILD_ID" Default="" Mode="" Description="Discord server ID whose members are allowed to sign in." Type="Variable" Display="advanced" Required="false" Mask="false"/>
   <TailscaleStateDir/>
 </Container>

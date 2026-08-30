@@ -54,6 +54,45 @@ Click **Apply** and allow Unraid to download and start the container.
 
 When installation finishes, open the Keida Hub WebUI and complete the first-run setup.
 
+## Optional Discord sign-in for your own Hub
+
+Discord sign-in is portable, but each independent Keida Hub should use its own Discord application instead of sharing the credentials and redirect URI used by `keida.me`. Discord requires OAuth redirect URIs to be explicitly registered, and Keida intentionally does not publish or bake a shared client secret into the container.
+
+### 1. Create a Discord application
+
+In the Discord Developer Portal, create an application for your Hub and record its **Application ID / Client ID** and **Client Secret**.
+
+Under the application's OAuth2 settings, add the exact callback URL for your Hub:
+
+    https://your-keida-host.example/api/auth/discord/callback
+
+Use the real public HTTPS address that users will open. The URI entered in Discord must exactly match the value configured in the Keida Hub template.
+
+### 2. Store the client secret outside the Docker template
+
+Keida reads the Discord OAuth client secret from `/config/discord-oauth-client-secret` so the secret does not appear in the Docker template or normal container environment listing.
+
+On Unraid, create that file inside Keida's appdata directory:
+
+    install -d -m 700 /mnt/user/appdata/keida-hub
+    printf '%s\n' 'YOUR_DISCORD_CLIENT_SECRET' > /mnt/user/appdata/keida-hub/discord-oauth-client-secret
+    chmod 600 /mnt/user/appdata/keida-hub/discord-oauth-client-secret
+
+Do not commit this file or paste the client secret into GitHub issues, Discord, or the Unraid template.
+
+### 3. Configure the advanced Unraid fields
+
+Edit the Keida Hub container, enable **Show more settings**, and set:
+
+- **Discord Sign-In Enabled:** `true`
+- **Discord OAuth Client ID:** your Discord Application ID
+- **Discord OAuth Redirect URI:** the exact callback URI registered above
+- **Discord Guild ID:** the Discord server whose members are allowed to sign in
+
+Apply the container changes. Keida requests only the Discord identity and guild-membership scopes needed for login, verifies membership in the configured server, and creates the normal Keida user session after a successful sign-in.
+
+If these values are incomplete or the client-secret file is missing, Discord sign-in stays unavailable instead of falling back to another installation's credentials.
+
 ## Updating Keida Hub
 
 Beta installations follow the `:beta` container tag.
