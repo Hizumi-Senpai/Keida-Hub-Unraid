@@ -18,6 +18,20 @@ jobs:
       - name: Check out repair branch
         uses: actions/checkout@v4
 
+      - name: Diagnose transfer chunks
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          echo "part-001 non-60-character lines:"
+          awk 'length($0) != 60 { print NR, length($0), $0 }' assets/icon-transfer/part-001.b64
+          cat assets/icon-transfer/part-*.b64 | tr -d '\r\n ' > /tmp/icon.b64
+          echo "base64_chars=$(wc -c < /tmp/icon.b64 | tr -d ' ')"
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('/tmp/icon.b64').read_text()
+          print('base64_mod4=', len(s) % 4)
+          PY
+
       - name: Reconstruct and verify exact PNG
         shell: bash
         run: |
