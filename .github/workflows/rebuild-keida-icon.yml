@@ -1,0 +1,42 @@
+name: Rebuild exact Keida icon
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - fix/exact-icon-publish
+    paths:
+      - .github/workflows/rebuild-keida-icon.yml
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repair branch
+        uses: actions/checkout@v4
+
+      - name: Reconstruct and verify exact PNG
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cat assets/icon-transfer/part-*.b64 | tr -d '\r\n ' | base64 -d > assets/keida-hairpin-icon.png
+          test "$(wc -c < assets/keida-hairpin-icon.png | tr -d ' ')" = "14492"
+          echo "74081707641deee692281d45c99542605cbe422c33c37e7def8bd87e8cff5791  assets/keida-hairpin-icon.png" | sha256sum -c -
+          file assets/keida-hairpin-icon.png
+
+      - name: Commit verified binary
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/keida-hairpin-icon.png
+          if git diff --cached --quiet; then
+            echo "Exact icon already present; nothing to commit."
+            exit 0
+          fi
+          git commit -m "Publish exact verified Keida Unraid icon"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
