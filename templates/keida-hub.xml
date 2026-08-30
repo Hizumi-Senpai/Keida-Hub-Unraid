@@ -15,7 +15,7 @@
   <Category>Tools:</Category>
   <WebUI>http://[IP]:[PORT:8787]/</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/Hizumi-Senpai/Keida-Hub-Unraid/main/templates/keida-hub.xml</TemplateURL>
-  <Icon/>
+  <Icon>https://raw.githubusercontent.com/Hizumi-Senpai/Keida-Hub-Unraid/main/assets/keida-hairpin-icon.png</Icon>
   <ExtraParams>--restart unless-stopped</ExtraParams>
   <PostArgs/>
   <CPUset/>
