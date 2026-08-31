@@ -1,4 +1,4 @@
-name: Sync Current Beta
+name: Sync Current Release Candidate
 
 on:
   push:
@@ -15,27 +15,27 @@ permissions:
   contents: write
 
 concurrency:
-  group: sync-current-beta
+  group: sync-current-release-candidate
   cancel-in-progress: true
 
 jobs:
   sync:
-    name: Sync published beta to README
+    name: Sync published RC to README
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     env:
-      BETA_IMAGE: ghcr.io/hizumi-senpai/keida-hub:beta
+      RC_IMAGE: ghcr.io/hizumi-senpai/keida-hub:rc
 
     steps:
       - name: Check out install repository
         uses: actions/checkout@v6
 
-      - name: Pull published beta image
-        run: docker pull "$BETA_IMAGE"
+      - name: Pull published RC image
+        run: docker pull "$RC_IMAGE"
 
-      - name: Read beta version from image
-        id: beta
+      - name: Read RC version from image
+        id: release
         shell: bash
         run: |
           set -Eeuo pipefail
@@ -43,40 +43,40 @@ jobs:
           RAW_VERSION="$(
             docker run --rm \
               --entrypoint python \
-              "$BETA_IMAGE" \
+              "$RC_IMAGE" \
               -c "import tomllib; print(tomllib.load(open('/app/backend/pyproject.toml', 'rb'))['project']['version'])"
           )"
 
-          if [[ "$RAW_VERSION" =~ ^([0-9]+\.[0-9]+\.[0-9]+)b([0-9]+)$ ]]; then
-            VERSION="${BASH_REMATCH[1]}-beta.${BASH_REMATCH[2]}"
-          elif [[ "$RAW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+-beta\.[0-9]+$ ]]; then
+          if [[ "$RAW_VERSION" =~ ^([0-9]+\.[0-9]+\.[0-9]+)rc([0-9]+)$ ]]; then
+            VERSION="${BASH_REMATCH[1]}-rc.${BASH_REMATCH[2]}"
+          elif [[ "$RAW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+-rc\.[0-9]+$ ]]; then
             VERSION="$RAW_VERSION"
           else
-            echo "ERROR: Unexpected beta version from image: $RAW_VERSION" >&2
+            echo "ERROR: Unexpected RC version from image: $RAW_VERSION" >&2
             exit 1
           fi
 
           echo "Image package version: $RAW_VERSION"
-          echo "Published beta:       $VERSION"
+          echo "Published RC:         $VERSION"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
-      - name: Confirm template follows beta tag
+      - name: Confirm template follows RC tag
         shell: bash
         run: |
           set -Eeuo pipefail
 
           grep -Fq \
-            '<Repository>ghcr.io/hizumi-senpai/keida-hub:beta</Repository>' \
+            '<Repository>ghcr.io/hizumi-senpai/keida-hub:rc</Repository>' \
             templates/keida-hub.xml
 
       - name: Sync README version marker
         env:
-          VERSION: ${{ steps.beta.outputs.version }}
+          VERSION: ${{ steps.release.outputs.version }}
         run: python3 .github/scripts/sync_beta_readme.py "$VERSION"
 
       - name: Commit page update when needed
         env:
-          VERSION: ${{ steps.beta.outputs.version }}
+          VERSION: ${{ steps.release.outputs.version }}
         shell: bash
         run: |
           set -Eeuo pipefail

@@ -4,15 +4,32 @@ This repository provides the Unraid Docker template for Keida Hub.
 
 Keida Hub is distributed as a public Docker image through GitHub Container Registry. No GitHub account, source-code checkout, Python installation, Node installation, or local build is required.
 
-## Current supported beta
+## Current supported release
 
-<!-- KEIDA_CURRENT_BETA_START -->
-`0.2.0-beta.9`
-<!-- KEIDA_CURRENT_BETA_END -->
+<!-- KEIDA_CURRENT_RELEASE_START -->
+`1.0.0-rc.1`
+<!-- KEIDA_CURRENT_RELEASE_END -->
 
-The Unraid template follows `ghcr.io/hizumi-senpai/keida-hub:beta`, so new installs and normal updates receive the current supported beta automatically.
+The Unraid template follows `ghcr.io/hizumi-senpai/keida-hub:rc`, so new installs and normal updates on the release-candidate channel receive the current supported Keida Hub 1.0 release candidate automatically.
+
+The final `1.0.0` stable channel has not been promoted yet. Until that release is published, `1.0.0-rc.1` is the supported 1.0 distribution for Unraid users.
 
 This repository intentionally documents the current install/update path rather than keeping upgrade instructions for every older beta. If a future release needs a special manual migration, it will be called out prominently here while that migration is relevant.
+
+## Upgrading an existing Beta.9 install
+
+Older installs created from the Beta.9 template may still have `ghcr.io/hizumi-senpai/keida-hub:beta` saved in their local Unraid container configuration. Updating this public template does not reliably rewrite that saved Repository field on an already-created container.
+
+To move an existing Beta.9 install onto Keida Hub 1.0 RC once:
+
+1. Open **Docker** in Unraid.
+2. Click the Keida Hub icon and choose **Edit**.
+3. Change **Repository** from `ghcr.io/hizumi-senpai/keida-hub:beta` to `ghcr.io/hizumi-senpai/keida-hub:rc`.
+4. Click **Apply**.
+
+Unraid will pull the RC image and recreate the container while preserving `/mnt/user/appdata/keida-hub`, including the Keida Hub database, configuration, integrations, accounts, and saved application state.
+
+After that one-time channel change, normal Unraid Docker updates follow the current `:rc` image automatically.
 
 ## Install on Unraid
 
@@ -39,7 +56,7 @@ If it does not appear immediately, refresh the Add Container page once.
 
 The template uses:
 
-- Docker image: `ghcr.io/hizumi-senpai/keida-hub:beta`
+- Docker image: `ghcr.io/hizumi-senpai/keida-hub:rc`
 - Network: `bridge`
 - WebUI port: `8787`
 - Appdata: `/mnt/user/appdata/keida-hub`
@@ -95,11 +112,11 @@ If these values are incomplete or the client-secret file is missing, Discord sig
 
 ## Updating Keida Hub
 
-Beta installations follow the `:beta` container tag.
+Release-candidate installations follow the `:rc` container tag.
 
-When a new supported beta is published, use Unraid's normal Docker update flow to update the Keida Hub container. Configuration, the database, and application state remain outside the container under `/mnt/user/appdata/keida-hub` and are preserved across normal container updates.
+When a new supported RC is published, use Unraid's normal Docker update flow to update the Keida Hub container. Configuration, the database, and application state remain outside the container under `/mnt/user/appdata/keida-hub` and are preserved across normal container updates.
 
-For routine beta-to-beta updates, no version-specific upgrade procedure is maintained here. Any release that requires unusual manual steps will include a temporary **Special migration notice** in this README.
+For routine RC-to-RC updates, no version-specific upgrade procedure is maintained here. Any release that requires unusual manual steps will include a temporary **Special migration notice** in this README.
 
 ## Crafty Controller
 
@@ -107,8 +124,8 @@ Keida Hub does not require direct access to Crafty's server files for normal ins
 
 Advanced installations can optionally add a read-only Crafty server-files mapping when filesystem-backed console functionality is desired.
 
-## Automatic beta-page sync
+## Automatic release-page sync
 
-This public install repository checks the published `:beta` container image on a schedule. When the image reports a new beta version, the current-version marker above is updated automatically.
+This public install repository checks the published `:rc` container image on a schedule. When the image reports a new supported release candidate, the current-version marker above is updated automatically.
 
 The application source repository remains separate and private.

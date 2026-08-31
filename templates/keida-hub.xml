@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Container version="2">
   <Name>keida-hub</Name>
-  <Repository>ghcr.io/hizumi-senpai/keida-hub:beta</Repository>
+  <Repository>ghcr.io/hizumi-senpai/keida-hub:rc</Repository>
   <Registry>https://github.com/users/Hizumi-Senpai/packages/container/package/keida-hub</Registry>
   <Network>bridge</Network>
   <MyIP/>
