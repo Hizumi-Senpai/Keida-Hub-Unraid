@@ -7,7 +7,7 @@ Keida Hub is distributed as a public Docker image through GitHub Container Regis
 ## Current supported beta
 
 <!-- KEIDA_CURRENT_BETA_START -->
-`0.2.0-beta.8`
+`0.2.0-beta.9`
 <!-- KEIDA_CURRENT_BETA_END -->
 
 The Unraid template follows `ghcr.io/hizumi-senpai/keida-hub:beta`, so new installs and normal updates receive the current supported beta automatically.
