@@ -14,22 +14,26 @@ The Unraid template follows `ghcr.io/hizumi-senpai/keida-hub:rc`, so new install
 
 The final `1.0.0` stable channel has not been promoted yet. Until that release is published, `1.0.0-rc.1` is the supported 1.0 distribution for Unraid users.
 
+For backward compatibility with installations created before the RC channel existed, the legacy `ghcr.io/hizumi-senpai/keida-hub:beta` tag currently points at the same `1.0.0-rc.1` image. Existing Beta.9 users can therefore use the same normal Unraid Docker update flow they used for earlier Keida Hub releases.
+
 This repository intentionally documents the current install/update path rather than keeping upgrade instructions for every older beta. If a future release needs a special manual migration, it will be called out prominently here while that migration is relevant.
 
 ## Upgrading an existing Beta.9 install
 
 Older installs created from the Beta.9 template may still have `ghcr.io/hizumi-senpai/keida-hub:beta` saved in their local Unraid container configuration. Updating this public template does not reliably rewrite that saved Repository field on an already-created container.
 
-To move an existing Beta.9 install onto Keida Hub 1.0 RC once:
+For the Beta.9 to 1.0 RC transition, a compatibility image alias is published so those existing installations can update normally:
 
 1. Open **Docker** in Unraid.
-2. Click the Keida Hub icon and choose **Edit**.
-3. Change **Repository** from `ghcr.io/hizumi-senpai/keida-hub:beta` to `ghcr.io/hizumi-senpai/keida-hub:rc`.
-4. Click **Apply**.
+2. Use **Check for Updates** if needed.
+3. Update the Keida Hub container the same way as previous releases.
+4. After the container starts, Keida Hub should report `1.0.0-rc.1`.
 
-Unraid will pull the RC image and recreate the container while preserving `/mnt/user/appdata/keida-hub`, including the Keida Hub database, configuration, integrations, accounts, and saved application state.
+The legacy `:beta` tag and the current `:rc` tag resolve to the same 1.0 RC image for this transition, so no appdata migration or container recreation is required beyond Unraid's normal image update.
 
-After that one-time channel change, normal Unraid Docker updates follow the current `:rc` image automatically.
+For the intended release channel going forward, it is still recommended to edit the Keida Hub container once and change **Repository** from `ghcr.io/hizumi-senpai/keida-hub:beta` to `ghcr.io/hizumi-senpai/keida-hub:rc`. This is a channel cleanup rather than a requirement for the Beta.9 to RC.1 upgrade.
+
+Configuration, the database, integrations, accounts, and saved application state remain under `/mnt/user/appdata/keida-hub` and are preserved across the update.
 
 ## Install on Unraid
 
@@ -115,6 +119,8 @@ If these values are incomplete or the client-secret file is missing, Discord sig
 Release-candidate installations follow the `:rc` container tag.
 
 When a new supported RC is published, use Unraid's normal Docker update flow to update the Keida Hub container. Configuration, the database, and application state remain outside the container under `/mnt/user/appdata/keida-hub` and are preserved across normal container updates.
+
+The legacy `:beta` tag is currently retained only as a compatibility bridge for installations that were already on Beta.9 when Keida Hub moved to the 1.0 RC channel. New installations should use `:rc`.
 
 For routine RC-to-RC updates, no version-specific upgrade procedure is maintained here. Any release that requires unusual manual steps will include a temporary **Special migration notice** in this README.
 
