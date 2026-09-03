@@ -7,7 +7,7 @@ Keida Hub is distributed as a public Docker image through GitHub Container Regis
 ## Current supported release
 
 <!-- KEIDA_CURRENT_RELEASE_START -->
-`1.0.0-rc.1`
+`1.0.0-rc.2`
 <!-- KEIDA_CURRENT_RELEASE_END -->
 
 The Unraid template follows `ghcr.io/hizumi-senpai/keida-hub:rc`, so new installs and normal updates on the release-candidate channel receive the current supported Keida Hub 1.0 release candidate automatically.
