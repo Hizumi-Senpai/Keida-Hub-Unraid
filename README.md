@@ -14,6 +14,8 @@ The Unraid template follows `ghcr.io/hizumi-senpai/keida-hub:rc`, so new install
 
 The final `1.0.0` stable channel has not been promoted yet. Until that release is published, use the current supported release candidate shown above.
 
+Public release history is mirrored on this repository's [GitHub Releases page](https://github.com/Hizumi-Senpai/Keida-Hub-Unraid/releases). Release-candidate entries are marked as prereleases so they are never mistaken for the final stable `1.0.0` channel.
+
 For backward compatibility with installations created before the RC channel existed, the legacy `ghcr.io/hizumi-senpai/keida-hub:beta` tag is maintained as a compatibility alias for the RC transition. Existing Beta.9 users can therefore use the same normal Unraid Docker update flow they used for earlier Keida Hub releases.
 
 This repository intentionally documents the current install/update path rather than keeping upgrade instructions for every older beta. If a future release needs a special manual migration, it will be called out prominently here while that migration is relevant.
@@ -132,6 +134,6 @@ Advanced installations can optionally add a read-only Crafty server-files mappin
 
 ## Automatic release-page sync
 
-This public install repository checks the published `:rc` container image on a schedule. When the image reports a new supported release candidate, the current-version marker above is updated automatically.
+This public install repository checks the published `:rc` container image on a schedule. When the image reports a new supported release candidate, the current-version marker above is updated automatically and a matching public GitHub prerelease is created if one does not already exist.
 
 The application source repository remains separate and private.
