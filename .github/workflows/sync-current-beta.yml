@@ -20,7 +20,7 @@ concurrency:
 
 jobs:
   sync:
-    name: Sync published RC to README
+    name: Sync published RC to public distribution
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -94,3 +94,39 @@ jobs:
           git add README.md
           git commit -m "Sync Unraid page to ${VERSION}"
           git push origin HEAD:main
+
+      - name: Publish public GitHub release entry when needed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.release.outputs.version }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          TAG="v${VERSION}"
+
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Public release already exists: $TAG"
+            exit 0
+          fi
+
+          NOTES="${RUNNER_TEMP}/keida-public-release.md"
+          cat > "$NOTES" <<EOF
+          ## Keida Hub ${VERSION}
+
+          This is the public distribution marker for the current supported Keida Hub release candidate.
+
+          - Unraid/current RC image: \`ghcr.io/hizumi-senpai/keida-hub:rc\`
+          - Exact version image: \`ghcr.io/hizumi-senpai/keida-hub:${VERSION}\`
+          - Existing Beta.9 installs may continue using the maintained \`:beta\` compatibility alias during the RC transition.
+          - Normal Unraid Docker updates preserve configuration and appdata under \`/mnt/user/appdata/keida-hub\`.
+
+          This is a **release candidate**, not the final stable \`1.0.0\` channel. The application source repository is separate; this public repository contains the supported Unraid install/update metadata.
+          EOF
+
+          gh release create "$TAG" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target main \
+            --title "Keida Hub ${VERSION}" \
+            --notes-file "$NOTES" \
+            --prerelease
